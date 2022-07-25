@@ -294,7 +294,7 @@ function isCreditCardNumber(ccn) {
   return checkDigit === lastDigit;
 }
 
-isCreditCardNumber(79927398713);
+// isCreditCardNumber(79927398713);
 
 /**
  * Returns the digital root of integer:
@@ -310,8 +310,14 @@ isCreditCardNumber(79927398713);
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  let sum = num;
+
+  do {
+    sum = sum.toString().split('').map(Number).reduce((a, b) => a + b);
+  } while (sum > 9);
+
+  return sum;
 }
 
 
@@ -336,8 +342,54 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+
+// https://github.com/malashonock/brackets/blob/master/src/index.js
+function validateBrackets(str, bracketsConfig) {
+  const statusStream = [];
+  let lastStatus = {};
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const char of str) {
+    // console.log(`Char: ${char}`);
+
+    for (let i = 0; i < bracketsConfig.length; i += 1) {
+      const [openingBracket, closingBracket] = bracketsConfig[i];
+      const bracketType = i + 1;
+
+      // console.log(`${openingBracket}${closingBracket}`);
+
+      if (char === closingBracket) {
+        lastStatus = statusStream[statusStream.length - 1];
+
+        if (lastStatus === bracketType) {
+          statusStream.pop();
+          // console.log(statusStream.toString());
+          break;
+        } else if (openingBracket !== closingBracket) {
+          return false;
+        }
+      }
+
+      if (char === openingBracket) {
+        statusStream.push(bracketType);
+        // console.log(statusStream.toString());
+        break;
+      }
+    }
+  }
+
+  return (statusStream.length === 0);
+}
+
+const defaultBracketsConfig = [
+  ['(', ')'],
+  ['[', ']'],
+  ['{', '}'],
+  ['<', '>'],
+];
+
+function isBracketsBalanced(str) {
+  return validateBrackets(str, defaultBracketsConfig);
 }
 
 
@@ -361,8 +413,17 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, radix) {
+  let naryString = '';
+  let remainingNumber = num;
+
+  do {
+    const naryDigit = remainingNumber % radix;
+    naryString = `${naryDigit}${naryString}`;
+    remainingNumber = Math.floor(remainingNumber / radix);
+  } while (remainingNumber);
+
+  return naryString;
 }
 
 
@@ -378,10 +439,21 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(paths) {
+  const overlapComparer = (prev, next) => {
+    let commonStart = prev;
+
+    while (commonStart && !next.startsWith(commonStart)) {
+      commonStart = commonStart.replace(/\/.*?$/, '/');
+    }
+
+    return commonStart;
+  };
+
+  return paths.reduce(overlapComparer);
 }
 
+getCommonDirectoryPath(['/web/assets/style.css', '/web/scripts/app.js', 'home/setting.conf']);
 
 /**
  * Returns the product of two specified matrixes.
