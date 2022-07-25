@@ -453,7 +453,7 @@ function getCommonDirectoryPath(paths) {
   return paths.reduce(overlapComparer);
 }
 
-getCommonDirectoryPath(['/web/assets/style.css', '/web/scripts/app.js', 'home/setting.conf']);
+// getCommonDirectoryPath(['/web/assets/style.css', '/web/scripts/app.js', 'home/setting.conf']);
 
 /**
  * Returns the product of two specified matrixes.
