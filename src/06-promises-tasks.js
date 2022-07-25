@@ -112,12 +112,11 @@ function chainPromises(array, action) {
     prevPromises.then((accumulatedValue) =>
       nextPromise.then((nextValue) => action(accumulatedValue, nextValue))
         .catch(() => 'Predictable Rejection')))
-    .catch(() => 'Predictable Rejection')
-    .then((result) => console.log(array, action, result));
+    .catch(() => 'Predictable Rejection');
 }
 
-const promises = [1, 2, 3].map((item) => new Promise((resolve) => resolve(item)));
-chainPromises(promises, (a, b) => +a + b).then((result) => console.log(result));
+// const promises = [1, 2, 3].map((item) => new Promise((resolve) => resolve(item)));
+// chainPromises(promises, (a, b) => +a + b).then((result) => console.log(result));
 
 module.exports = {
   willYouMarryMe,

@@ -158,12 +158,12 @@ const cssSelectorBuilder = {
   },
 };
 
-const builder = cssSelectorBuilder;
-console.log(builder.combine(
-  builder.id('charter1').class('touch'),
-  '+',
-  builder.element('table'),
-).stringify());
+// const builder = cssSelectorBuilder;
+// console.log(builder.combine(
+//   builder.id('charter1').class('touch'),
+//   '+',
+//   builder.element('table'),
+// ).stringify());
 
 module.exports = {
   Rectangle,
