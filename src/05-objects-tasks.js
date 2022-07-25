@@ -20,8 +20,10 @@
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+  this.getArea = () => this.width * this.height;
 }
 
 
@@ -35,8 +37,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 
@@ -51,8 +53,10 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  const srcObj = JSON.parse(json);
+  const dstObj = Object.create(proto);
+  return Object.assign(dstObj, srcObj);
 }
 
 
@@ -111,35 +115,55 @@ function fromJSON(/* proto, json */) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  selector: '',
+
+  element(value) {
+    this.selector += value;
+    return { ...cssSelectorBuilder, ...this };
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    this.selector += `#${value}`;
+    return { ...cssSelectorBuilder, ...this };
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    this.selector += `.${value}`;
+    return { ...cssSelectorBuilder, ...this };
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    this.selector += `[${value}]`;
+    return { ...cssSelectorBuilder, ...this };
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    this.selector += `:${value}`;
+    return { ...cssSelectorBuilder, ...this };
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    this.selector += `::${value}`;
+    return { ...cssSelectorBuilder, ...this };
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    const leftSelector = selector1.selector;
+    const rightSelector = selector2.selector;
+    return { ...cssSelectorBuilder, ...{ selector: `${leftSelector} ${combinator} ${rightSelector}` } };
+  },
+
+  stringify() {
+    return this.selector;
   },
 };
 
+const builder = cssSelectorBuilder;
+console.log(builder.combine(
+  builder.id('charter1').class('touch'),
+  '+',
+  builder.element('table'),
+).stringify());
 
 module.exports = {
   Rectangle,
